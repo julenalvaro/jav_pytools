@@ -1,0 +1,26 @@
+API para exponer el backend de la BD de películas
+
+Activar entorno virtual: 
+
+venv\Scripts\activate
+
+####################### UVICORN ########################
+
+uvicorn: servidor ASGI para exponer la API a la red. 
+
+uvicorn main:app --reload --port 5000
+
+#Para que esté disponible para el resto de dispositivos de la red: 
+
+uvicorn main:app --reload --port 5000 --host 0.0.0.0
+
+#################### TESTING ###########################
+
+python -m unittest discover -s tests -p "test_*.py"
+
+Correr un solo archivo: 
+
+
+ 
+
+
