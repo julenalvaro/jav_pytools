@@ -8,7 +8,7 @@ from jav_pytools.os._utils.headers import add_headers_to_files
 # Importar la función para añadir headers desde headers.py
 # Asegúrate de que la ruta de importación sea correcta según tu estructura de directorios
 
-def main(set_headers=False):
+def main(set_headers=False, output_to_file=False):
     def list_files(startpath, exclude_dirs, exclude_prefix):
         def add_directory_structure(structure, root, level):
             if level > 0:  # Esto asegura que no añadimos la raíz dos veces
@@ -39,16 +39,23 @@ def main(set_headers=False):
     exclude_prefix = "venv"  # Si no hay prefijo específico a excluir, se deja vacío
 
     try:
-        output_dir = "tools"
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir, 'estructura.txt')
+        structure = list_files('.', exclude_dirs, exclude_prefix)
 
-        with open(output_path, 'w', encoding='utf-8') as f:
-            structure = list_files('.', exclude_dirs, exclude_prefix)
-            f.write(structure)
+        # Lógica para manejar la salida basada en output_to_file
+        if output_to_file:
+            output_dir = "tools"
+            os.makedirs(output_dir, exist_ok=True)
+            output_path = os.path.join(output_dir, 'estructura.txt')
+
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(structure)
+            print(f"El archivo '{output_path}' ha sido generado correctamente.")
+        else:
+            pass
+            # print(structure)  # Simplemente imprime la estructura en la consola
 
         pyperclip.copy(structure)
-        print(f"El archivo '{output_path}' ha sido generado correctamente y su contenido ha sido copiado al portapapeles")
+        print("La estructura del directorio ha sido copiada al portapapeles.")
 
         # Llamar a add_headers_to_files si set_headers es True
         if set_headers:
@@ -62,4 +69,5 @@ def main(set_headers=False):
 
 if __name__ == "__main__":
     # Cambia True a False si no quieres añadir headers automáticamente
-    main(set_headers=True)
+    # Cambia output_to_file a True si deseas que el resultado se escriba en un archivo
+    main(set_headers=True, output_to_file=False)

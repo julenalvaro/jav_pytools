@@ -16,9 +16,4 @@ setup(
     install_requires=[
         'pyperclip==1.8.2', 
     ],
-    entry_points={
-        'console_scripts': [
-            'jav-tree=jav_pytools.os.tree:main',
-        ],
-    },
 )
