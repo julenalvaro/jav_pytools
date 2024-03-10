@@ -1,2 +1,2 @@
--e git+https://github.com/julenalvaro/jav-pytools.git@e9703be861cd7f2e5ec176d25148cf0730a9aaf6#egg=javtools
 pyperclip==1.8.2
+-e file:///C:/Users/18287/OneDrive/dev/javtools

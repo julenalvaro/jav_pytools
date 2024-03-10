@@ -1,8 +1,9 @@
+# src/os/tree.py
+
 import os
 import pyperclip
-import argparse
 
-from jav_pytools.os._utils.headers import add_headers_to_files
+from src.os._utils.headers import add_headers_to_files
 
 def generate_tree():
     def list_files(startpath, exclude_dirs, exclude_prefix):

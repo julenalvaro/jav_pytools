@@ -18,7 +18,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'jav-tree=jav_pytools.os.tree:generate_tree',
+            'jav-tree=src.os.tree:generate_tree',
         ],
     },
 )

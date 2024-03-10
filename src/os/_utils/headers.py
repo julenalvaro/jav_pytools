@@ -1,6 +1,4 @@
-# jav_pytools/os/_utils/headers.py
-
-# jav_pytools/os/headers.py
+# src/os/_utils/headers.py
 
 import os
 from pathlib import Path
