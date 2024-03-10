@@ -1,6 +1,4 @@
-# src/os/add_root_to_path.py
-
-# jav_pytools/os/add_root_to_path.py
+# PATH: src/javtools/os/add_root_to_path.py
 
 # add_root_to_path.py
 import os

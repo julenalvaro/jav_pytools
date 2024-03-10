@@ -1,13 +1,11 @@
-# src/os/watcher_archivo.py
-
-# jav_pytools/os/watcher_archivo.py
+# PATH: src/javtools/os/watcher_archivo.py
 
 import re
 import json
 from pathlib import Path
 from datetime import datetime
 
-def watcher_archivo(dir_watch, file_watch_regex, last_run_metadata_file):
+def watch_archivo(dir_watch, file_watch_regex, last_run_metadata_file):
     # Carga los metadatos almacenados de la última ejecución, si existen
     try:
         with open(last_run_metadata_file, 'r') as file:

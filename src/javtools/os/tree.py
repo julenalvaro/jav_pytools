@@ -1,9 +1,9 @@
-# src/os/tree.py
+# PATH: src/javtools/os/tree.py
 
 import os
 import pyperclip
 
-from src.os._utils.headers import add_headers_to_files
+from ._utils.headers import add_headers_to_files
 
 def generate_tree():
     def list_files(startpath, exclude_dirs, exclude_prefix):
