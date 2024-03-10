@@ -1,3 +1,5 @@
+# PATH: setup.py
+
 # setup.py
 
 from setuptools import setup, find_packages
@@ -9,7 +11,8 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 setup(
     name='javtools',
     version='0.1',
-    packages=find_packages(),
+    package_dir={'': 'src'},
+    packages=find_packages(where='src'),
     description='Herramientas personalizadas para mi uso.',
     long_description=long_description,
     long_description_content_type='text/markdown',  # Indicar el tipo de contenido del long_description
@@ -18,7 +21,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'jav-tree=src.os.tree:generate_tree',
+            'jav-tree=javtools.os.tree:generate_tree',
         ],
     },
 )
