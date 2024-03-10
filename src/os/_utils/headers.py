@@ -3,23 +3,15 @@
 import os
 from pathlib import Path
 
-def add_headers_to_files():
-    def find_project_root(start_path: Path) -> Path:
-        if (start_path / '.git').exists():
-            return start_path
-        
-        if start_path.parent == start_path:
-            return start_path
-        
-        return find_project_root(start_path.parent)
+def add_headers_to_files(startpath):
+    
     comment_tokens = {'.py': '#', '.js': '//'}
     target_extensions = ['.py', '.js']
     exclude_dirs = ["venv"]
 
     current_path = Path(__file__).parent
-    root_dir = find_project_root(current_path)
 
-    for foldername, subfolders, filenames in os.walk(root_dir):
+    for foldername, subfolders, filenames in os.walk(startpath):
         # Excluir directorios especificados
         if any(exclude_dir in foldername for exclude_dir in exclude_dirs):
             continue
@@ -29,10 +21,10 @@ def add_headers_to_files():
 
             if extension in target_extensions:
                 file_path = Path(foldername) / filename
-                relative_path = file_path.relative_to(root_dir).as_posix()  # as_posix() convierte las rutas a formato POSIX
+                relative_path = file_path.relative_to(startpath).as_posix()  # as_posix() convierte las rutas a formato POSIX
 
                 try:
-                    with open(file_path, 'r') as file:
+                    with open(file_path, 'r', encoding='utf-8') as file:  # Añade encoding='utf-8'
                         first_line = file.readline().strip()
                         if first_line == f"{comment_tokens[extension]} {relative_path}":
                             continue
@@ -41,12 +33,13 @@ def add_headers_to_files():
                     continue
 
                 try:
-                    with open(file_path, 'r') as file:
+                    with open(file_path, 'r', encoding='utf-8') as file:  # Añade encoding='utf-8'
                         content = file.read()
 
-                    with open(file_path, 'w') as file:
+                    with open(file_path, 'w', encoding='utf-8') as file:  # Añade encoding='utf-8' aquí también
                         file.write(f"{comment_tokens[extension]} {relative_path}\n\n{content}")
                 except Exception as e:
                     print(f"Error al escribir en el archivo {file_path}: {str(e)}")
+
 
     print(f"Headers añadidos para archivos {', '.join(target_extensions)}.")

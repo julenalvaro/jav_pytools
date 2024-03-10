@@ -35,7 +35,7 @@ def generate_tree():
         structure = list_files('.', exclude_dirs, exclude_prefix)
         pyperclip.copy(structure)
         print("La estructura del directorio ha sido copiada al portapapeles.")
-        add_headers_to_files()  # Siempre añade headers
+        add_headers_to_files('.')  # Siempre añade headers
     except OSError as e:
         print(f"Error al trabajar con el archivo: {e}")
     except Exception as e:
