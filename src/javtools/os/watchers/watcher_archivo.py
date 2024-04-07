@@ -1,4 +1,4 @@
-# PATH: src/javtools/watchers/watcher_archivo.py
+# PATH: src/javtools/os/watchers/watcher_archivo.py
 
 import re
 import json

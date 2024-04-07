@@ -1,4 +1,4 @@
-# PATH: src/javtools/watchers/watcher_con_ejecucion.py
+# PATH: src/javtools/os/watchers/watcher_con_ejecucion.py
 
 import re
 import json
@@ -15,6 +15,7 @@ def watch_and_execute(dir_watch, file_watch_regex, last_run_metadata_file, funci
     watch_dir = Path(dir_watch)
     regex_pattern = file_watch_regex
 
+    #busca el archivo más reciente
     latest_file = None
     latest_mod_time = None
     for file in watch_dir.glob('*'):

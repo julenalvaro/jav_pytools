@@ -1,3 +1,5 @@
+# PATH: src/javtools/clip/column_to_sql.py
+
 import pyperclip
 import re
 
