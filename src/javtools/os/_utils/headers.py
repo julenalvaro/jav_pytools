@@ -4,10 +4,9 @@ import os
 from pathlib import Path
 import re
 
-def add_headers_to_files(startpath):
+def add_headers_to_files(startpath, exclude_dirs):
     comment_tokens = {'.py': '#', '.js': '//'}
     target_extensions = ['.py', '.js']
-    exclude_dirs = ["venv"]
     path_comment_pattern = re.compile(r'^\s*# PATH: .+?$')  # Expresión regular para identificar comentarios de ruta
 
     for foldername, subfolders, filenames in os.walk(startpath):

@@ -28,14 +28,14 @@ def generate_tree():
                 structure = add_file_structure(structure, f, sublevel)
         return structure
 
-    exclude_dirs = ["__pycache__", "venv", ".git", "tools", "archivos"]
+    exclude_dirs = ["__pycache__", "venv", ".git", "tools", "archivos", "node_modules"]
     exclude_prefix = "venv"
 
     try:
         structure = list_files('.', exclude_dirs, exclude_prefix)
         pyperclip.copy(structure)
         print("La estructura del directorio ha sido copiada al portapapeles.")
-        add_headers_to_files('.')  # Siempre añade headers
+        add_headers_to_files('.', exclude_dirs)  # Siempre añade headers
     except OSError as e:
         print(f"Error al trabajar con el archivo: {e}")
     except Exception as e:
