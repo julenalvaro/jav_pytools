@@ -1,7 +1,5 @@
 # PATH: setup.py
 
-# setup.py
-
 from setuptools import setup, find_packages
 
 # Usar with para asegurar que el archivo se cierre correctamente

@@ -28,7 +28,7 @@ def generate_tree():
                 structure = add_file_structure(structure, f, sublevel)
         return structure
 
-    exclude_dirs = ["__pycache__", "venv", ".git", "tools", "archivos", "node_modules"]
+    exclude_dirs = ["__pycache__", "venv", ".git", "tools", "archivos", "output", "node_modules"]
     exclude_prefix = "venv"
 
     try:
