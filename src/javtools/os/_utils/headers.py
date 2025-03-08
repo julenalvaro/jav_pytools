@@ -10,9 +10,21 @@ import re
 
 def add_headers_to_files(startpath, exclude_dirs):
     # Tokens de comentarios para diferentes extensiones de archivo
-    comment_tokens = {'.py': '#', '.js': '//', '.jsx': '//', '.css': '/*'}
+    comment_tokens = {'.py': '#', 
+                      '.js': '//', 
+                      '.jsx': '//', 
+                      '.css': '/*',
+                      '.yml': '#',
+                      'Dockerfile': '#'}
+    
     end_comment_tokens = {'.css': ' */'}  # Token de fin de comentario para CSS
-    target_extensions = ['.py', '.js', '.jsx', '.css']  # Añadir soporte para archivos .css
+
+    target_extensions = [ '.py', 
+                          '.js', 
+                          '.jsx', 
+                          '.css',
+                          '.yml',
+                          'Dockerfile']
 
     # Compilación de la expresión regular para la detección de comentarios de ruta en diferentes formatos
     path_comment_patterns = {
