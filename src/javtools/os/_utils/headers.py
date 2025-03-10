@@ -4,7 +4,7 @@ import re
 
 def add_headers_to_files(startpath, exclude_dirs):
     # 1. Configuración general
-    target_extensions = {'.py', '.js', '.jsx', '.css', '.yml'}  # Archivos por extensión
+    target_extensions = {'.py', '.js', '.jsx', '.ts', '.tsx', '.css', '.yml'}  # Archivos por extensión
     target_prefixes = {'.env'}  # Archivos que empiezan con un prefijo
     target_exact_names = {'Dockerfile'}  # Archivos con nombre exacto (case-insensitive)
 
@@ -13,6 +13,8 @@ def add_headers_to_files(startpath, exclude_dirs):
         '.py': '#', 
         '.js': '//', 
         '.jsx': '//', 
+        '.ts': '//', 
+        '.tsx': '//', 
         '.css': '/*',
         '.yml': '#',
         'default': '#'  # Para archivos sin extensión (ej. Dockerfile, .env)
