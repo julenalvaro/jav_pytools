@@ -21,6 +21,18 @@ def remove_old_paths(lines, comment_token):
     pattern = re.compile(r'^\s*' + re.escape(comment_token) + r'\s*PATH:.*', re.IGNORECASE)
     return [line for line in lines if not pattern.match(line)]
 
+def clean_extra_newlines(lines):
+    """
+    Garantiza que después del header haya exactamente DOS saltos de línea antes del contenido real.
+    """
+    # Eliminamos líneas en blanco después del header
+    while len(lines) > 1 and lines[1].strip() == '':
+        lines.pop(1)  
+    
+    # Agregamos exactamente DOS saltos de línea después del header
+    lines.insert(1, "\n")
+    return lines
+
 def process_file(file_path, startpath, target_extensions, target_prefixes,
                  target_exact_names, comment_tokens, end_comment_tokens):
     # 1. Determinar extensión y token de comentario
@@ -37,7 +49,7 @@ def process_file(file_path, startpath, target_extensions, target_prefixes,
     header_line = f"{token} PATH: {relative_path}"
     if extension in end_comment_tokens:
         header_line += end_comment_tokens[extension]
-    header_line += "\n\n"
+    header_line += "\n"
 
     # 4. Leer archivo y limpiar encabezados viejos
     try:
@@ -46,8 +58,9 @@ def process_file(file_path, startpath, target_extensions, target_prefixes,
 
         new_lines = remove_old_paths(lines, token)
         new_lines.insert(0, header_line)
+        new_lines = clean_extra_newlines(new_lines)
 
-        # 5. Sobrescribir
+        # 5. Sobrescribir el archivo con el nuevo contenido limpio
         with open(file_path, 'w', encoding='utf-8') as f:
             f.writelines(new_lines)
 
