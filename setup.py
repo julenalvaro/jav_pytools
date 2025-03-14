@@ -20,6 +20,7 @@ setup(
     entry_points={
         'console_scripts': [
             'jav-tree=javtools.os.tree:generate_tree',
+            'jav-csv=javtools.xlsx.get_csv_headers:main',
         ],
     },
 )

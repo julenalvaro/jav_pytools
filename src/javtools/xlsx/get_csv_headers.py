@@ -6,73 +6,96 @@ import pyperclip
 import pandas as pd
 import os
 
-def main():
+def get_file_path():
     """
     Abre un cuadro de diálogo para seleccionar un archivo .csv, .xlsx o .xlsm.
-    Pregunta cuántas líneas se quieren mostrar (por defecto, 10).
-    Recorre todas las hojas del documento y copia al portapapeles
-    una línea por hoja con el nombre de la hoja y sus columnas separadas por ';'.
-    Muestra también por consola los primeros N registros de cada hoja.
+    Retorna la ruta seleccionada o una cadena vacía si no seleccionaste nada.
     """
-    # Inicializa la ventana de Tkinter (sin que aparezca la ventana principal)
     root = tk.Tk()
     root.withdraw()
-
-    # Abre el explorador de archivos para escoger el CSV/XLSX/XLSM
-    file_path = filedialog.askopenfilename(
+    return filedialog.askopenfilename(
         title="Selecciona un archivo CSV, XLSX o XLSM",
         filetypes=[
-            ("Todos los archivos", "*.*")
+            ("Todos los archivos", "*.*"),
             ("Archivos CSV", "*.csv"),
             ("Archivos Excel", "*.xlsx *.xlsm"),
         ]
     )
 
-    if not file_path:
-        print("No se ha seleccionado ningún archivo. Saliendo...")
-        return
+def ask_num_lines():
+    """
+    Pregunta cuántas líneas se desean mostrar y retorna un entero (por defecto, 5).
+    """
+    num_lines_str = input("¿Cuántas líneas quieres mostrar? (por defecto, 5): ").strip()
+    return 5 if not num_lines_str else int(num_lines_str)
 
-    # Pregunta cuántas líneas mostrar (por defecto, 10)
-    num_lines_str = input("¿Cuántas líneas quieres mostrar? (por defecto, 10): ").strip()
-    num_lines = 10 if not num_lines_str else int(num_lines_str)
-
-    # Dependiendo de la extensión, leemos el archivo de distinta forma
-    file_ext = os.path.splitext(file_path)[1].lower()
-    
-    # Diccionario: key=nombre de hoja, value=DataFrame
-    dataframes = {}
-
-    if file_ext == ".csv":
-        # Cuando es CSV, técnicamente solo hay 1 "hoja"
-        df = pd.read_csv(file_path, nrows=None)  # leemos todo para los headers
-        sheet_name = os.path.basename(file_path)  # usar nombre de archivo como "nombre de hoja"
-        dataframes[sheet_name] = df
+def load_dataframes(file_path):
+    """
+    Carga y retorna un diccionario con {nombre_de_hoja: DataFrame}.
+    Si el archivo es CSV, se asume una sola 'hoja' usando el nombre del archivo.
+    """
+    extension = os.path.splitext(file_path)[1].lower()
+    if extension == ".csv":
+        df = pd.read_csv(file_path, nrows=None)
+        sheet_name = os.path.basename(file_path)
+        return {sheet_name: df}
     else:
-        # Para XLSX o XLSM, leemos todas las hojas
-        dataframes = pd.read_excel(file_path, sheet_name=None)
+        return pd.read_excel(file_path, sheet_name=None)
 
-    # Vamos a construir el texto que irá al portapapeles
-    # Una línea por cada hoja, en formato: "NombreHoja;col1;col2;col3..."
+def copy_to_clipboard_and_print(dataframes, num_lines):
+    """
+    Muestra en consola y copia al portapapeles las primeras N filas de cada hoja
+    en formato CSV separado por ';'.
+    """
     lines_for_clipboard = []
 
     for sheet_name, df in dataframes.items():
-        # Mostramos por consola los primeros N registros
+        df_head = df.head(num_lines)
+        csv_text = df_head.to_csv(index=False, sep=';')
         print(f"\n=== Hoja: {sheet_name} ===")
-        print(df.head(num_lines).to_string(index=False))
+        print(csv_text)
+        # Para el portapapeles, agrupamos nombre de hoja y su CSV
+        lines_for_clipboard.append(f"=== Hoja: {sheet_name} ===\n{csv_text}")
 
-        # Tomamos las columnas, las unimos con ';'
-        columns_joined = ";".join(str(col) for col in df.columns)
-        # Nombre de la hoja + las columnas
-        line = f"{sheet_name};{columns_joined}"
-        lines_for_clipboard.append(line)
-
-    # Unimos todo con saltos de línea
     final_text = "\n".join(lines_for_clipboard)
-    # Lo copiamos al portapapeles
     pyperclip.copy(final_text)
+    print("\nLas primeras líneas se han copiado al portapapeles en formato CSV separado por ';'.")
 
-    print("\nLos headers se han copiado al portapapeles.")
-    print("Formato: una línea por hoja, con el nombre de la hoja y sus columnas separados por ';'.")
+def ask_save_csv():
+    """
+    Pregunta si se desea guardar los datos en archivos CSV. Retorna True/False.
+    """
+    save_csv_str = input("\n¿Quieres guardar estos datos en archivo(s) CSV? (s/n): ").strip().lower()
+    return save_csv_str in ('s', 'si', 'y', 'yes')
+
+def save_to_csv(file_path, dataframes, num_lines):
+    """
+    Genera un CSV por cada hoja, guardando las primeras N filas.
+    Si hay un error, muestra un mensaje sin interrumpir el flujo.
+    """
+    base_name, _ = os.path.splitext(file_path)
+    for sheet_name, df in dataframes.items():
+        try:
+            df_head = df.head(num_lines)
+            safe_sheet_name = sheet_name.replace('/', '_').replace('\\', '_').replace(':', '_')
+            out_path = f"{base_name}_{safe_sheet_name}.csv"
+            df_head.to_csv(out_path, index=False, sep=';')
+            print(f"Archivo CSV generado: {out_path}")
+        except Exception as e:
+            print(f"No se pudo generar el archivo CSV para la hoja '{sheet_name}': {e}")
+
+def main():
+    file_path = get_file_path()
+    if not file_path:
+        print("No se ha seleccionado ningún archivo. Saliendo...")
+        return
+    
+    num_lines = ask_num_lines()
+    dataframes = load_dataframes(file_path)
+    copy_to_clipboard_and_print(dataframes, num_lines)
+
+    if ask_save_csv():
+        save_to_csv(file_path, dataframes, num_lines)
 
 if __name__ == "__main__":
     main()
