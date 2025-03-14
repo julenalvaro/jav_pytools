@@ -48,15 +48,12 @@ def copy_to_clipboard_and_print(dataframes, num_lines):
     en formato CSV separado por ';'.
     """
     lines_for_clipboard = []
-
     for sheet_name, df in dataframes.items():
         df_head = df.head(num_lines)
         csv_text = df_head.to_csv(index=False, sep=';')
         print(f"\n=== Hoja: {sheet_name} ===")
         print(csv_text)
-        # Para el portapapeles, agrupamos nombre de hoja y su CSV
         lines_for_clipboard.append(f"=== Hoja: {sheet_name} ===\n{csv_text}")
-
     final_text = "\n".join(lines_for_clipboard)
     pyperclip.copy(final_text)
     print("\nLas primeras líneas se han copiado al portapapeles en formato CSV separado por ';'.")
@@ -70,15 +67,21 @@ def ask_save_csv():
 
 def save_to_csv(file_path, dataframes, num_lines):
     """
-    Genera un CSV por cada hoja, guardando las primeras N filas.
-    Si hay un error, muestra un mensaje sin interrumpir el flujo.
+    Genera un CSV por cada hoja en un subdirectorio {nombre_archivo}_csv_headers,
+    guardando las primeras N filas. Intenta sobreescribir los existentes.
+    Ante cualquier problema, muestra el error pero no interrumpe el flujo.
     """
-    base_name, _ = os.path.splitext(file_path)
+    base_name = os.path.splitext(os.path.basename(file_path))[0]
+    out_dir = f"{base_name}_csv_headers"
+    os.makedirs(out_dir, exist_ok=True)
     for sheet_name, df in dataframes.items():
         try:
             df_head = df.head(num_lines)
-            safe_sheet_name = sheet_name.replace('/', '_').replace('\\', '_').replace(':', '_')
-            out_path = f"{base_name}_{safe_sheet_name}.csv"
+            safe_sheet_name = (sheet_name
+                                .replace('/', '_')
+                                .replace('\\', '_')
+                                .replace(':', '_'))
+            out_path = os.path.join(out_dir, f"{safe_sheet_name}.csv")
             df_head.to_csv(out_path, index=False, sep=';')
             print(f"Archivo CSV generado: {out_path}")
         except Exception as e:
@@ -89,11 +92,9 @@ def main():
     if not file_path:
         print("No se ha seleccionado ningún archivo. Saliendo...")
         return
-    
     num_lines = ask_num_lines()
     dataframes = load_dataframes(file_path)
     copy_to_clipboard_and_print(dataframes, num_lines)
-
     if ask_save_csv():
         save_to_csv(file_path, dataframes, num_lines)
 
