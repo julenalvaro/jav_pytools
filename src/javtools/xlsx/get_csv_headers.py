@@ -71,8 +71,9 @@ def save_to_csv(file_path, dataframes, num_lines):
     guardando las primeras N filas. Intenta sobreescribir los existentes.
     Ante cualquier problema, muestra el error pero no interrumpe el flujo.
     """
+    file_dir = os.path.dirname(file_path)
     base_name = os.path.splitext(os.path.basename(file_path))[0]
-    out_dir = f"{base_name}_csv_headers"
+    out_dir = os.path.join(file_dir, f"{base_name}_csv_headers")
     os.makedirs(out_dir, exist_ok=True)
     for sheet_name, df in dataframes.items():
         try:
