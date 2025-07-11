@@ -69,7 +69,7 @@ def process_file(file_path, startpath, target_extensions, target_prefixes,
 
 def add_headers_to_files(startpath, exclude_dirs):
     # Extensiones / nombres a procesar
-    target_extensions = {'.py', '.js', '.jsx', '.ts', '.tsx', '.css', '.yml'}
+    target_extensions = {'.py', '.js', '.jsx', '.ts', '.tsx', '.css', '.yml','.toml'}
     target_prefixes = {'.env'}
     target_exact_names = {'Dockerfile'}
 
@@ -82,6 +82,7 @@ def add_headers_to_files(startpath, exclude_dirs):
         '.tsx': '//',
         '.css': '/*',
         '.yml': '#',
+        '.toml': '#',
         'default': '#'
     }
     end_comment_tokens = {'.css': ' */'}

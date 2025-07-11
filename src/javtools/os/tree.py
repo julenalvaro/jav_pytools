@@ -33,8 +33,11 @@ def generate_tree():
                     ".git", 
                     "tools", 
                     "archivos", 
+                    "archivo", 
                     "output", 
-                    "node_modules"]
+                    "node_modules",
+                    "pgdata",
+                    "tmp"]
     
     exclude_prefix = "venv"
 
